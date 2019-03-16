@@ -30,6 +30,16 @@ There are two things you can do about this warning:
 ;; Set custom settings to load in own file
 (setq custom-file (make-temp-file "emacs-custom"))
 
+;; Store all backup and autosave files in the tmp dir
+;; Save all tempfiles in $TMPDIR/emacs$UID/
+    (defconst emacs-tmp-dir (expand-file-name (format "emacs%d" (user-uid)) temporary-file-directory))
+    (setq backup-directory-alist
+        `((".*" . ,emacs-tmp-dir)))
+    (setq auto-save-file-name-transforms
+        `((".*" ,emacs-tmp-dir t)))
+    (setq auto-save-list-file-prefix
+        emacs-tmp-dir)
+
 ;; Bootstrap use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
